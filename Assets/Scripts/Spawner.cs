@@ -1,8 +1,56 @@
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
     public Wave[] waves;
+    public Enemy enemy;
+
+    Wave currentWave;
+    int currentWaveNumber;
+
+    int enemiesRemainingToSpawn;
+    int enemiesRemainingAlive;
+    float nextSpawnTime;
+
+    void Start()
+    {
+        NextWave();
+    }
+
+    void Update()
+    {
+        if (enemiesRemainingToSpawn > 0 && Time.time > nextSpawnTime)
+        {
+            enemiesRemainingToSpawn--;
+            nextSpawnTime = Time.time + currentWave.timeBetweenSpawns;
+
+            Enemy spawnedEnemy = Instantiate(enemy, Vector3.zero, Quaternion.identity);
+            spawnedEnemy.OnDeath += OnEnemyDeath;
+        }
+    }
+
+    void OnEnemyDeath()
+    {
+        enemiesRemainingAlive--;
+
+        if (enemiesRemainingAlive <= 0)
+        {
+            NextWave();
+        }
+    }
+
+    void NextWave()
+    {
+        currentWaveNumber++;
+        print("Wave: " + currentWaveNumber);
+        if (currentWaveNumber > waves.Length) return;
+
+        currentWave = waves[currentWaveNumber - 1];
+
+        enemiesRemainingToSpawn = currentWave.enemyCount;
+        enemiesRemainingAlive = enemiesRemainingToSpawn;
+    }
 
     [System.Serializable]
     public class Wave
