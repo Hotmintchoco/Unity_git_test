@@ -11,16 +11,20 @@ public class Enemy : LivingEntity
 
     NavMeshAgent pathfinder;
     Transform target;
+    LivingEntity targetEntity;
     Material skinMaterial;
 
     Color originalColour;
 
     float attackDistanceThreshold = .5f;
     float timeBetweenAttacks = 1f;
+    float damage = 1f;
 
     float nextAttackTime;
     float myCollisionRadius;
     float targetCollisionRadius;
+
+    bool hasTarget;
 
     protected override void Start()
     {
@@ -29,17 +33,31 @@ public class Enemy : LivingEntity
         skinMaterial = GetComponent<Renderer>().material;
         originalColour = skinMaterial.color;
 
-        currentState = State.Chasing;
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        if (GameObject.FindGameObjectWithTag("Player") != null)
+        {
+            currentState = State.Chasing;
+            hasTarget = true;
 
-        myCollisionRadius = GetComponent<CapsuleCollider>().radius;
-        targetCollisionRadius = target.GetComponent<CapsuleCollider>().radius;
+            target = GameObject.FindGameObjectWithTag("Player").transform;
+            targetEntity = target.GetComponent<LivingEntity>();
+            targetEntity.OnDeath += OnTargetDeath;
 
-        StartCoroutine(UpdatePath());
+            myCollisionRadius = GetComponent<CapsuleCollider>().radius;
+            targetCollisionRadius = target.GetComponent<CapsuleCollider>().radius;
+
+            StartCoroutine(UpdatePath());
+        }
+    }
+
+    void OnTargetDeath()
+    {
+        hasTarget = false;
+        currentState = State.Idle;
     }
 
     void Update()
     {
+        if (!hasTarget) return;
         if (Time.time > nextAttackTime)
         {
             float sqrDstToTarget = (target.position - transform.position).sqrMagnitude;
@@ -60,13 +78,20 @@ public class Enemy : LivingEntity
         Vector3 dirToTarget = (target.position - transform.position).normalized;
         Vector3 attackPosition = target.position - dirToTarget * myCollisionRadius;
 
-        skinMaterial.color = Color.red;
-
         float attackSpeed = 3;
         float percent = 0;
 
+        skinMaterial.color = Color.red;
+        bool hasAppliedDamage = false;
+
         while (percent <= 1)
         {
+            if (percent >= .5f && !hasAppliedDamage)
+            {
+                hasAppliedDamage = true;
+                targetEntity.TakeDamage(damage);
+            }
+
             percent += Time.deltaTime * attackSpeed;
             float interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;
             transform.position = Vector3.Lerp(originalPosition, attackPosition, interpolation);
@@ -83,7 +108,7 @@ public class Enemy : LivingEntity
     {
         float refreshRate = .25f;
 
-        while (target != null)
+        while (hasTarget)
         {
             if (currentState == State.Chasing)
             {
