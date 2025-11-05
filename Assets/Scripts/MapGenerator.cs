@@ -10,6 +10,9 @@ public class MapGenerator : MonoBehaviour
     [Range(0, 1)]
     public float outlinePercent;
 
+    [Range(0, 1)]
+    public float obstaclePercent;
+
     List<Coord> allTileCoords;
     Queue<Coord> shuffledTileCoords;
 
@@ -53,11 +56,14 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        int obstacleCount = 10;
+        bool[,] obstacleMap = new bool[(int)mapSize.x, (int)mapSize.y];
+
+        int obstacleCount = (int)(mapSize.x * mapSize.y * obstaclePercent);
         for (int i = 0; i < obstacleCount; i++)
         {
             Coord randomCoord = GetRandomCoord();
             Vector3 obstaclePosition = CoordToPosition(randomCoord.x, randomCoord.y);
+
             Transform newObstacle = Instantiate(obstaclePrefab, obstaclePosition + Vector3.up * .5f, Quaternion.identity);
             newObstacle.parent = mapHolder;
         }
