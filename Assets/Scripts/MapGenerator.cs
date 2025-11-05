@@ -87,7 +87,7 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        // navmeshFloor.localScale = new Vector3(maxMapSize.x, maxMapSize.y) * tileSize;
+        navmeshFloor.localScale = new Vector3(maxMapSize.x, maxMapSize.y) * tileSize;
     }
 
     bool MapIsFullyAccessible(bool[,] obstacleMap, int currentObstacleCount)
