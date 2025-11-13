@@ -254,7 +254,7 @@ public class MapGenerator : MonoBehaviour
         {
             get
             {
-                return new Coord(mapSize.x / 2, mapSize.y / 2);
+                return new Coord((mapSize.x - 1) / 2, (mapSize.y - 1) / 2);
             }
         }
     }
