@@ -20,12 +20,14 @@ public class Spawner : MonoBehaviour
     MapGenerator map;
 
     float timeBetweenCampingChecks = 2f;
-    float campThresholdDistance = 1.5f; 
+    float campThresholdDistance = 1.5f;
     float nextCampCheckTime;
     Vector3 campPositionOld;
     bool isCamping;
 
     bool isDisabled;
+
+    public event System.Action<int> OnNewWave;
 
     void Start()
     {
@@ -48,7 +50,7 @@ public class Spawner : MonoBehaviour
             {
                 nextCampCheckTime = Time.time + timeBetweenCampingChecks;
 
-                isCamping = (Vector3.Distance(playerT.position, campPositionOld) < campThresholdDistance);
+                isCamping = Vector3.Distance(playerT.position, campPositionOld) < campThresholdDistance;
                 campPositionOld = playerT.position;
             }
             if (enemiesRemainingToSpawn > 0 && Time.time > nextSpawnTime)
@@ -58,7 +60,7 @@ public class Spawner : MonoBehaviour
 
                 StartCoroutine(SpawnEnemy());
             }
-        }   
+        }
     }
 
     IEnumerator SpawnEnemy()
@@ -86,7 +88,7 @@ public class Spawner : MonoBehaviour
         Enemy spawnedEnemy = Instantiate(enemy, spawnTile.position + Vector3.up, Quaternion.identity);
         spawnedEnemy.OnDeath += OnEnemyDeath;
     }
-    
+
     void OnPlayerDeath()
     {
         isDisabled = true;
@@ -102,16 +104,26 @@ public class Spawner : MonoBehaviour
         }
     }
 
+    void ResetPlayerPosition()
+    {
+        playerT.position = map.GetTileFromPosition(Vector3.zero).position + Vector3.up * 2;
+    }
+
     void NextWave()
     {
         currentWaveNumber++;
-        print("Wave: " + currentWaveNumber);
         if (currentWaveNumber > waves.Length) return;
 
         currentWave = waves[currentWaveNumber - 1];
 
         enemiesRemainingToSpawn = currentWave.enemyCount;
         enemiesRemainingAlive = enemiesRemainingToSpawn;
+
+        if (OnNewWave != null)
+        {
+            OnNewWave(currentWaveNumber);
+        }
+        ResetPlayerPosition();
     }
 
     [System.Serializable]
