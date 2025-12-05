@@ -3,16 +3,12 @@ using UnityEngine;
 public class GunController : MonoBehaviour
 {
     public Transform weaponHold;
-    public Gun startingGun;
+    public Gun[] allGuns;
     Gun equippedGun;
 
     void Start()
     {
-        if (startingGun != null)
-        {
-            EquipGun(startingGun);
-            //equippedGun.GetComponent<Collider>().enabled = false; // 물리 충돌 아예 끔
-        }
+        
     }
 
     public void EquipGun(Gun gunToEquip)
@@ -23,6 +19,11 @@ public class GunController : MonoBehaviour
         }
         equippedGun = Instantiate(gunToEquip, weaponHold.position, weaponHold.rotation);
         equippedGun.transform.parent = weaponHold;
+    }
+
+    public void EquipGun(int weaponIndex)
+    {
+        EquipGun(allGuns[weaponIndex]);
     }
 
     public void OnTriggerHold()

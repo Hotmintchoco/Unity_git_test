@@ -15,9 +15,21 @@ public class Player : LivingEntity
     protected override void Start()
     {
         base.Start();
+        
+    }
+
+    void Awake()
+    {
         controller = GetComponent<PlayerController>();
         gunController = GetComponent<GunController>();
         viewCamera = Camera.main;
+        FindAnyObjectByType<Spawner>().OnNewWave += OnNewWave;
+    }
+
+    void OnNewWave(int waveNumber)
+    {
+        health = startingHealth;
+        gunController.EquipGun(waveNumber - 1);
     }
 
     void Update()

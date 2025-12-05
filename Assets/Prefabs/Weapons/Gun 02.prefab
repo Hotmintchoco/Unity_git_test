@@ -110,13 +110,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1799348870695244764}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.10171696, z: -0, w: 0.9948134}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.27, z: 1.17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3392867108235687034}
-  m_LocalEulerAnglesHint: {x: 0, y: 11.676, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2954155172466636298
 GameObject:
   m_ObjectHideFlags: 0
@@ -910,7 +910,6 @@ MonoBehaviour:
   fireMode: 1
   projectileSpawn:
   - {fileID: 4690233123177871914}
-  - {fileID: 0}
   projectile: {fileID: 7960667867162704261, guid: 32cc9fab8ae49ac4f94a455ce96fd7d0, type: 3}
   msBetweenShots: 75
   muzzleVelocity: 35
