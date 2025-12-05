@@ -11,6 +11,7 @@ public class GunController : MonoBehaviour
         if (startingGun != null)
         {
             EquipGun(startingGun);
+            //equippedGun.GetComponent<Collider>().enabled = false; // 물리 충돌 아예 끔
         }
     }
 
@@ -45,6 +46,14 @@ public class GunController : MonoBehaviour
         get
         {
             return weaponHold.position.y;
+        }
+    }
+
+    public void Aim(Vector3 aimPoint)
+    {
+        if (equippedGun != null)
+        {
+            equippedGun.Aim(aimPoint);
         }
     }
 }
