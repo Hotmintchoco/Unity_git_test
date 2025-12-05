@@ -6,7 +6,7 @@ public class Player : LivingEntity
 {
     public float moveSpeed = 5;
 
-    public Transform crosshairs;
+    public Crosshairs crosshairs;
 
     Camera viewCamera;
     PlayerController controller;
@@ -37,7 +37,8 @@ public class Player : LivingEntity
             Vector3 point = ray.GetPoint(rayDistance);
             // Debug.DrawLine(ray.origin, point, Color.red);
             controller.LookAt(point);
-            crosshairs.position = point;
+            crosshairs.transform.position = point;
+            crosshairs.DetectTargets(ray);
         }
 
         // Weapon input
