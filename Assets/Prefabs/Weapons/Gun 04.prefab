@@ -892,14 +892,16 @@ MonoBehaviour:
   msBetweenShots: 500
   muzzleVelocity: 20
   burstCount: 3
-  projectilePerMag: 5
-  reloadTime: 0.2
+  projectilePerMag: 10
+  reloadTime: 0.3
   kickMinMax: {x: 0.05, y: 0.2}
   recoilAngleMinMax: {x: 3, y: 5}
   recoilMoveSettleTime: 0.1
   recoilRotationSettleTime: 0.1
   shell: {fileID: 5355946647180055767, guid: 532f0e2e976149d468e94e46e0999c9a, type: 3}
   shellEjection: {fileID: 3475876333637415894}
+  shootAudio: {fileID: 8300000, guid: 8a8997ebd44a96d4b952324492de496e, type: 3}
+  reloadAudio: {fileID: 8300000, guid: 4b60b1adf54438c44bb4580bd6213204, type: 3}
 --- !u!114 &9136640557583802389
 MonoBehaviour:
   m_ObjectHideFlags: 0
