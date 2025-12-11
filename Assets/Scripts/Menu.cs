@@ -28,7 +28,7 @@ public class Menu : MonoBehaviour
 			resolutionToggles [i].isOn = i == activeScreenResIndex;
 		}
 
-		SetFullscreen(isFullscreen);
+		fullscreenToggle.isOn = isFullscreen;
 	}
 
 
