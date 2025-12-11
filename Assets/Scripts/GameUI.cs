@@ -13,12 +13,15 @@ public class GameUI : MonoBehaviour
     public TextMeshProUGUI newWaveTitle;
     public TextMeshProUGUI newWaveEnemyCount;
     public TextMeshProUGUI scoreUI;
+    public RectTransform healthBar;
 
     Spawner spawner;
+    Player player;
 
     void Start()
     {
-        FindAnyObjectByType<Player>().OnDeath += OnGameOver;
+        player = FindAnyObjectByType<Player>();
+        player.OnDeath += OnGameOver;
     }
 
     void Awake()
@@ -30,6 +33,12 @@ public class GameUI : MonoBehaviour
     void Update()
     {
         scoreUI.text = ScoreKeeper.score.ToString("D6");
+        float healthPercent = 0;
+        if (player != null)
+        {
+            healthPercent = player.health / player.startingHealth;
+        }
+        healthBar.localScale = new Vector3 (healthPercent, 1, 1);
     }
 
     void OnNewWave(int waveNumber)
@@ -71,7 +80,7 @@ public class GameUI : MonoBehaviour
                 }
             }
 
-            newWaveBanner.anchoredPosition = Vector2.up * Mathf.Lerp(-170, 45, animatePercent);
+            newWaveBanner.anchoredPosition = Vector2.up * Mathf.Lerp(-220, 45, animatePercent);
             yield return null;
         }
     }
