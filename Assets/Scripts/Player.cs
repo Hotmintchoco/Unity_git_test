@@ -12,6 +12,8 @@ public class Player : LivingEntity
     PlayerController controller;
     GunController gunController;
 
+    Animator animator;
+
     protected override void Start()
     {
         base.Start();
@@ -24,6 +26,8 @@ public class Player : LivingEntity
         gunController = GetComponent<GunController>();
         viewCamera = Camera.main;
         FindAnyObjectByType<Spawner>().OnNewWave += OnNewWave;
+
+        animator = GetComponentInChildren<Animator>();
     }
 
     void OnNewWave(int waveNumber)
@@ -38,6 +42,11 @@ public class Player : LivingEntity
         Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         Vector3 moveVelocity = moveInput.normalized * moveSpeed;
         controller.Move(moveVelocity);
+
+        if (animator != null)
+        {
+            animator.SetFloat("Speed", moveInput.magnitude, 0.1f, Time.deltaTime);
+        }
 
         // Look Input
         Ray ray = viewCamera.ScreenPointToRay(Input.mousePosition);

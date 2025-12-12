@@ -75,7 +75,6 @@ public class GameUI : MonoBehaviour
 
         if (currentGun != null)
         {
-            print("new Gun");
             currentGun.OnAmmoChanged += UpdateProjectileUI;
             UpdateProjectileUI();
         }
