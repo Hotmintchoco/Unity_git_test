@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -14,6 +15,8 @@ public class Gun : MonoBehaviour
     public int projectilePerMag;
     public int projectilesRemainingInMag { get; private set; }
     public float reloadTime = .3f;
+
+    public event Action OnAmmoChanged;
 
     [Header("Recoil")]
     public Vector2 kickMinMax = new Vector2(.05f, .2f);
@@ -32,13 +35,14 @@ public class Gun : MonoBehaviour
 
     bool triggerReleasedSinceLastShot;
     int shotsRemainingInBurst;
+    
     bool isReloading;
 
     Vector3 recoilSmoothDampVelocity;
     float recoilRotSmoothDampVelocity;
     float recoilAngle;
 
-    void Start()
+    void Awake()
     {
         muzzleFlash = GetComponent<MuzzleFlash>();
         shotsRemainingInBurst = burstCount;
@@ -85,13 +89,17 @@ public class Gun : MonoBehaviour
 
                 projectilesRemainingInMag--;
                 nextShotTime = Time.time + msBetweenShots / 1000f;
+
+                // 총알의 변화를 알림
+                if (OnAmmoChanged != null) OnAmmoChanged();
+
                 Projectile newProjectile = Instantiate(projectile, projectileSpawn[i].position, projectileSpawn[i].rotation);
                 newProjectile.SetSpeed(muzzleVelocity);
             }
             Instantiate(shell, shellEjection.position, shellEjection.rotation);
             muzzleFlash.Activate();
-            transform.localPosition -= Vector3.forward * Random.Range(kickMinMax.x, kickMinMax.y);
-            recoilAngle += Random.Range(recoilAngleMinMax.x, recoilAngleMinMax.y);
+            transform.localPosition -= Vector3.forward * UnityEngine.Random.Range(kickMinMax.x, kickMinMax.y);
+            recoilAngle += UnityEngine.Random.Range(recoilAngleMinMax.x, recoilAngleMinMax.y);
             recoilAngle = Mathf.Clamp(recoilAngle, 0, 30);
 
             AudioManager.instance.PlaySound(shootAudio, transform.position);
@@ -129,6 +137,7 @@ public class Gun : MonoBehaviour
 
         isReloading = false;
         projectilesRemainingInMag = projectilePerMag;
+        if (OnAmmoChanged != null) OnAmmoChanged();
     }
 
     public void Aim(Vector3 aimPoint)

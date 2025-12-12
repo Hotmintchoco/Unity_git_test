@@ -19,6 +19,9 @@ public class GameUI : MonoBehaviour
 
     Spawner spawner;
     Player player;
+    GunController gunController;
+    Gun currentGun;
+
     int waveNumber;
 
     void Start()
@@ -31,6 +34,9 @@ public class GameUI : MonoBehaviour
     {
         spawner = FindAnyObjectByType<Spawner>();
         spawner.OnNewWave += OnNewWave;
+
+        gunController = FindAnyObjectByType<GunController>();
+        gunController.OnGunEquipped += OnEquipNewGun;
     }
 
     void Update()
@@ -43,18 +49,6 @@ public class GameUI : MonoBehaviour
             healthPercent = player.health / player.startingHealth;
         }
         healthBar.localScale = new Vector3 (healthPercent, 1, 1);
-        
-        if (player.gun != null)
-        { 
-            int remaining = player.gun.projectilesRemainingInMag;
-            int perMag = player.gun.projectilePerMag;
-            if (waveNumber == 4)
-            {
-                remaining /= 5;
-                perMag /= 5;
-            }
-            projectileUI.text = remaining.ToString() + " / " + perMag.ToString();
-        }
     }
 
     void OnNewWave(int _waveNumber)
@@ -70,6 +64,39 @@ public class GameUI : MonoBehaviour
         StartCoroutine("AnimateNewWaveBanner");
     }
 
+    void OnEquipNewGun(Gun newGun)
+    {
+        if (currentGun != null)
+        {
+            currentGun.OnAmmoChanged -= UpdateProjectileUI;
+        }
+
+        currentGun = newGun;
+
+        if (currentGun != null)
+        {
+            print("new Gun");
+            currentGun.OnAmmoChanged += UpdateProjectileUI;
+            UpdateProjectileUI();
+        }
+    }
+
+    void UpdateProjectileUI()
+    {
+        if (currentGun != null)
+        {
+            int remaining = currentGun.projectilesRemainingInMag;
+            int perMag = currentGun.projectilePerMag;
+            
+            if (waveNumber == 4)
+            {
+                remaining /= 5;
+                perMag /= 5;
+            }
+            projectileUI.text = remaining.ToString() + " / " + perMag.ToString();
+        }
+    }
+
     void OnGameOver()
     {
         Cursor.visible = true;
@@ -78,6 +105,13 @@ public class GameUI : MonoBehaviour
         scoreUI.gameObject.SetActive(false);
         healthBar.transform.parent.gameObject.SetActive(false);
         gameOverUI.SetActive(true);
+    }
+
+    void OnDestroy()
+    {
+        if(gunController != null) {
+            gunController.OnGunEquipped -= OnEquipNewGun;
+        }
     }
 
     IEnumerator AnimateNewWaveBanner()
