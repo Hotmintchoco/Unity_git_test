@@ -96,17 +96,19 @@ public class Enemy : LivingEntity
 
     void Update()
     {
-        if (!hasTarget) return;
-        if (Time.time > nextAttackTime)
+        if (hasTarget)
         {
-            float sqrDstToTarget = (target.position - transform.position).sqrMagnitude;
-            if (sqrDstToTarget < Math.Pow(attackDistanceThreshold + myCollisionRadius + targetCollisionRadius, 2))
+            if (Time.time > nextAttackTime)
             {
-                nextAttackTime = Time.time + timeBetweenAttacks;
-                AudioManager.instance.PlaySound("Enemy Attack", transform.position);
-                StartCoroutine(Attack());
+                float sqrDstToTarget = (target.position - transform.position).sqrMagnitude;
+                if (sqrDstToTarget < Math.Pow(attackDistanceThreshold + myCollisionRadius + targetCollisionRadius, 2))
+                {
+                    nextAttackTime = Time.time + timeBetweenAttacks;
+                    AudioManager.instance.PlaySound("Enemy Attack", transform.position);
+                    StartCoroutine(Attack());
+                }
             }
-        }
+        } 
     }
 
     IEnumerator Attack()

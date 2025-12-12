@@ -17,7 +17,7 @@ public class Menu : MonoBehaviour
 	void Start() 
     {
 		activeScreenResIndex = PlayerPrefs.GetInt ("screen res index");
-		bool isFullscreen = (PlayerPrefs.GetInt ("fullscreen") == 1)?true:false;
+		bool isFullscreen = PlayerPrefs.GetInt ("fullscreen") == 1;
 
 		volumeSliders [0].value = AudioManager.instance.masterVolumePercent;
 		volumeSliders [1].value = AudioManager.instance.musicVolumePercent;
