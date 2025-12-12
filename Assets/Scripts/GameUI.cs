@@ -19,6 +19,7 @@ public class GameUI : MonoBehaviour
 
     Spawner spawner;
     Player player;
+    int waveNumber;
 
     void Start()
     {
@@ -44,17 +45,26 @@ public class GameUI : MonoBehaviour
         healthBar.localScale = new Vector3 (healthPercent, 1, 1);
         
         if (player.gun != null)
-        {
-            projectileUI.text = player.gun.projectilesRemainingInMag.ToString() + " / " + player.gun.projectilePerMag.ToString();
+        { 
+            int remaining = player.gun.projectilesRemainingInMag;
+            int perMag = player.gun.projectilePerMag;
+            if (waveNumber == 4)
+            {
+                remaining /= 5;
+                perMag /= 5;
+            }
+            projectileUI.text = remaining.ToString() + " / " + perMag.ToString();
         }
     }
 
-    void OnNewWave(int waveNumber)
+    void OnNewWave(int _waveNumber)
     {
+        waveNumber = _waveNumber;
         string[] numbers = {"One", "Two", "Three", "Four", "Five"};
         newWaveTitle.text = "- Wave " + numbers[waveNumber - 1] + " -";
         string enemyCountString = spawner.waves[waveNumber -1].infinite ? "Infinite" : spawner.waves[waveNumber - 1].enemyCount + "";
         newWaveEnemyCount.text = "Enemies: " + enemyCountString;
+        
 
         StopCoroutine("AnimateNewWaveBanner");
         StartCoroutine("AnimateNewWaveBanner");
