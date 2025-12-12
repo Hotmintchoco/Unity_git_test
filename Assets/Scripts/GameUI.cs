@@ -13,6 +13,7 @@ public class GameUI : MonoBehaviour
     public TextMeshProUGUI newWaveTitle;
     public TextMeshProUGUI newWaveEnemyCount;
     public TextMeshProUGUI scoreUI;
+    public TextMeshProUGUI projectileUI;
     public TextMeshProUGUI gameOverScoreUI;
     public RectTransform healthBar;
 
@@ -34,12 +35,18 @@ public class GameUI : MonoBehaviour
     void Update()
     {
         scoreUI.text = ScoreKeeper.score.ToString("D6");
+
         float healthPercent = 0;
         if (player != null)
         {
             healthPercent = player.health / player.startingHealth;
         }
         healthBar.localScale = new Vector3 (healthPercent, 1, 1);
+        
+        if (player.gun != null)
+        {
+            projectileUI.text = player.gun.projectilesRemainingInMag.ToString() + " / " + player.gun.projectilePerMag.ToString();
+        }
     }
 
     void OnNewWave(int waveNumber)

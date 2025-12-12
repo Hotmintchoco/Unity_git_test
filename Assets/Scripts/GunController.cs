@@ -6,11 +6,6 @@ public class GunController : MonoBehaviour
     public Gun[] allGuns;
     Gun equippedGun;
 
-    void Start()
-    {
-        
-    }
-
     public void EquipGun(Gun gunToEquip)
     {
         if (equippedGun != null)
@@ -21,9 +16,11 @@ public class GunController : MonoBehaviour
         equippedGun.transform.parent = weaponHold;
     }
 
-    public void EquipGun(int weaponIndex)
+    public Gun EquipGun(int weaponIndex)
     {
         EquipGun(allGuns[weaponIndex]);
+
+        return equippedGun;
     }
 
     public void OnTriggerHold()

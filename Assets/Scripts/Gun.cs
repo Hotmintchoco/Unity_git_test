@@ -12,6 +12,7 @@ public class Gun : MonoBehaviour
     public float muzzleVelocity = 35f;
     public int burstCount;
     public int projectilePerMag;
+    public int projectilesRemainingInMag { get; private set; }
     public float reloadTime = .3f;
 
     [Header("Recoil")]
@@ -31,7 +32,6 @@ public class Gun : MonoBehaviour
 
     bool triggerReleasedSinceLastShot;
     int shotsRemainingInBurst;
-    int projectilesRemainingInMag;
     bool isReloading;
 
     Vector3 recoilSmoothDampVelocity;

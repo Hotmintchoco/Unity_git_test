@@ -7,6 +7,7 @@ public class Player : LivingEntity
     public float moveSpeed = 5;
 
     public Crosshairs crosshairs;
+    public Gun gun { get; private set; }
 
     Camera viewCamera;
     PlayerController controller;
@@ -29,7 +30,7 @@ public class Player : LivingEntity
     void OnNewWave(int waveNumber)
     {
         health = startingHealth;
-        gunController.EquipGun(waveNumber - 1);
+        gun = gunController.EquipGun(waveNumber - 1);
     }
 
     void Update()
