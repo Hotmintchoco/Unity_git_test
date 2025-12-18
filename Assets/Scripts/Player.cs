@@ -13,6 +13,7 @@ public class Player : LivingEntity
     GunController gunController;
 
     Animator animator;
+    bool isShooting;
 
     protected override void Start()
     {
@@ -67,9 +68,10 @@ public class Player : LivingEntity
         }
 
         // Weapon input
-        if (Input.GetMouseButton(0))
+        if (Input.GetButton("Shoot"))
         {
             gunController.OnTriggerHold();
+            ShootMotion();
         }
         if (Input.GetMouseButtonUp(0))
         {
@@ -90,5 +92,13 @@ public class Player : LivingEntity
     {
         AudioManager.instance.PlaySound("Player Death", transform.position);
         base.Die();
+    }
+
+    void ShootMotion()
+    {
+        if (animator != null)
+        {
+            animator.SetTrigger("doShoot");
+        }
     }
 }
